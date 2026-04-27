@@ -1,0 +1,1690 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghotra's Hospital — HMS</title>
+  <meta name="description" content="Ghotra's Hospital Management System">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0b0f1a;
+  --surface:   #111827;
+  --surface2:  #1a2236;
+  --border:    #1e2d45;
+  --primary:   #38bdf8;
+  --primary-d: #0284c7;
+  --accent:    #818cf8;
+  --success:   #34d399;
+  --warning:   #fbbf24;
+  --danger:    #f87171;
+  --text:      #e2e8f0;
+  --muted:     #64748b;
+  --sidebar-w: 240px;
+}
+
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* â”€â”€ Login â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+#login-screen {
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  background: radial-gradient(ellipse at 20% 50%, #0c2a4a 0%, #0b0f1a 60%),
+              radial-gradient(ellipse at 80% 20%, #1a103a 0%, transparent 60%);
+}
+.login-card {
+  background: rgba(17,24,39,0.85); border:1px solid var(--border);
+  border-radius:20px; padding:48px 40px; width:100%; max-width:440px;
+  backdrop-filter:blur(20px); box-shadow:0 25px 60px rgba(0,0,0,0.6);
+}
+.login-logo { display:flex; align-items:center; gap:12px; margin-bottom:32px; }
+.login-logo .logo-icon {
+  width:48px; height:48px; background:linear-gradient(135deg,var(--primary),var(--accent));
+  border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px;
+}
+.login-logo h1 { font-size:22px; font-weight:700; color:var(--text); }
+.login-logo span { font-size:12px; color:var(--muted); display:block; }
+.login-card h2 { font-size:26px; font-weight:700; margin-bottom:6px; }
+.login-card p  { color:var(--muted); font-size:14px; margin-bottom:28px; }
+
+.demo-creds {
+  background:rgba(56,189,248,0.07); border:1px solid rgba(56,189,248,0.2);
+  border-radius:10px; padding:14px 16px; margin-bottom:24px; font-size:13px;
+}
+.demo-creds strong { color:var(--primary); display:block; margin-bottom:6px; }
+.demo-creds span   { color:var(--muted); line-height:1.8; }
+.demo-creds code   { color:var(--text); background:rgba(255,255,255,0.07); padding:1px 5px; border-radius:4px; }
+
+/* â”€â”€ Forms â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.form-group { margin-bottom:18px; }
+.form-group label { display:block; font-size:13px; font-weight:500; color:var(--muted); margin-bottom:6px; }
+.form-control {
+  width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border);
+  border-radius:10px; padding:11px 14px; color:var(--text); font-size:14px;
+  font-family:inherit; transition:border-color .2s, box-shadow .2s; outline:none;
+}
+.form-control:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(56,189,248,0.15); }
+.form-control::placeholder { color:var(--muted); }
+select.form-control option { background:var(--surface); }
+
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+/* â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.btn {
+  display:inline-flex; align-items:center; gap:7px; padding:10px 20px;
+  border-radius:10px; font-size:14px; font-weight:600; cursor:pointer;
+  border:none; font-family:inherit; transition:all .2s; text-decoration:none; white-space:nowrap;
+}
+.btn-primary { background:linear-gradient(135deg,var(--primary),var(--primary-d)); color:#fff; }
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(56,189,248,0.35); }
+.btn-success { background:linear-gradient(135deg,var(--success),#059669); color:#fff; }
+.btn-success:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(52,211,153,0.35); }
+.btn-danger  { background:linear-gradient(135deg,var(--danger),#dc2626); color:#fff; }
+.btn-danger:hover  { transform:translateY(-1px); box-shadow:0 6px 20px rgba(248,113,113,0.35); }
+.btn-warning { background:linear-gradient(135deg,var(--warning),#d97706); color:#111; }
+.btn-outline {
+  background:transparent; border:1px solid var(--border); color:var(--text);
+}
+.btn-outline:hover { border-color:var(--primary); color:var(--primary); }
+.btn-sm { padding:7px 14px; font-size:12px; }
+.btn-full { width:100%; justify-content:center; padding:13px; font-size:15px; }
+
+/* â”€â”€ Layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+#main-app { display:flex; min-height:100vh; }
+
+#sidebar {
+  width:var(--sidebar-w); background:var(--surface); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; position:fixed; top:0; left:0; height:100vh;
+  overflow-y:auto; z-index:100; transition:transform .3s;
+}
+.sidebar-logo {
+  padding:24px 20px 16px; display:flex; align-items:center; gap:10px;
+  border-bottom:1px solid var(--border);
+}
+.sidebar-logo .logo-icon {
+  width:36px; height:36px; background:linear-gradient(135deg,var(--primary),var(--accent));
+  border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px;
+}
+.sidebar-logo h2 { font-size:15px; font-weight:700; }
+.sidebar-logo span { font-size:10px; color:var(--muted); display:block; }
+
+.sidebar-section { padding:16px 12px 4px; }
+.sidebar-section-label { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; padding:0 8px 8px; }
+
+.nav-link {
+  display:flex; align-items:center; gap:10px; padding:10px 12px;
+  border-radius:9px; color:var(--muted); font-size:13.5px; font-weight:500;
+  cursor:pointer; transition:all .2s; border:none; background:none; width:100%; text-align:left;
+}
+.nav-link:hover  { background:rgba(255,255,255,0.05); color:var(--text); }
+.nav-link.active { background:rgba(56,189,248,0.12); color:var(--primary); }
+.nav-link .nav-icon { font-size:16px; width:20px; text-align:center; }
+
+.sidebar-bottom { margin-top:auto; padding:16px 12px; border-top:1px solid var(--border); }
+.user-card { display:flex; align-items:center; gap:10px; padding:8px; border-radius:9px; }
+.user-avatar {
+  width:36px; height:36px; border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; flex-shrink:0;
+}
+.user-info .user-name { font-size:13px; font-weight:600; }
+.user-info .user-role { font-size:11px; color:var(--muted); text-transform:capitalize; }
+
+#topbar {
+  position:fixed; top:0; left:var(--sidebar-w); right:0; height:64px;
+  background:rgba(11,15,26,0.85); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border); display:flex; align-items:center;
+  padding:0 28px; gap:16px; z-index:50;
+}
+.topbar-title { font-size:18px; font-weight:700; flex:1; }
+.topbar-actions { display:flex; align-items:center; gap:12px; }
+
+#content { margin-left:var(--sidebar-w); margin-top:64px; padding:28px; flex:1; }
+
+/* â”€â”€ Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:14px; padding:24px; margin-bottom:20px;
+}
+.card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.card-title  { font-size:16px; font-weight:700; }
+
+.stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:24px; }
+.stat-card {
+  background:var(--surface); border:1px solid var(--border); border-radius:14px;
+  padding:22px; display:flex; align-items:center; gap:16px; transition:transform .2s;
+}
+.stat-card:hover { transform:translateY(-2px); }
+.stat-icon {
+  width:52px; height:52px; border-radius:12px; display:flex;
+  align-items:center; justify-content:center; font-size:22px; flex-shrink:0;
+}
+.stat-icon.blue   { background:rgba(56,189,248,0.15); }
+.stat-icon.purple { background:rgba(129,140,248,0.15); }
+.stat-icon.green  { background:rgba(52,211,153,0.15); }
+.stat-icon.yellow { background:rgba(251,191,36,0.15); }
+.stat-icon.red    { background:rgba(248,113,113,0.15); }
+.stat-val  { font-size:28px; font-weight:800; }
+.stat-label{ font-size:12px; color:var(--muted); margin-top:2px; }
+
+/* â”€â”€ Tables â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:13.5px; }
+th { padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; border-bottom:1px solid var(--border); white-space:nowrap; }
+td { padding:12px 14px; border-bottom:1px solid rgba(30,45,69,0.6); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(255,255,255,0.02); }
+
+.search-bar {
+  display:flex; align-items:center; gap:10px; margin-bottom:18px;
+}
+.search-input-wrap { position:relative; flex:1; max-width:340px; }
+.search-input-wrap input {
+  width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border);
+  border-radius:9px; padding:9px 14px 9px 36px; color:var(--text); font-size:13.5px;
+  font-family:inherit; outline:none; transition:border-color .2s;
+}
+.search-input-wrap input:focus { border-color:var(--primary); }
+.search-input-wrap .search-icon { position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:14px; }
+
+/* â”€â”€ Badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+.badge-blue    { background:rgba(56,189,248,0.15);  color:var(--primary); }
+.badge-green   { background:rgba(52,211,153,0.15);  color:var(--success); }
+.badge-yellow  { background:rgba(251,191,36,0.15);  color:var(--warning); }
+.badge-red     { background:rgba(248,113,113,0.15); color:var(--danger); }
+.badge-purple  { background:rgba(129,140,248,0.15); color:var(--accent); }
+.badge-gray    { background:rgba(100,116,139,0.15); color:var(--muted); }
+
+/* â”€â”€ Modals â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px);
+  display:none; align-items:center; justify-content:center; z-index:1000; padding:20px;
+}
+.modal-overlay.active { display:flex; animation:fadeIn .2s ease; }
+.modal-box {
+  background:var(--surface); border:1px solid var(--border); border-radius:16px;
+  padding:28px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto;
+  animation:slideUp .25s ease;
+}
+.modal-box.wide { max-width:720px; }
+.modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+.modal-header h3 { font-size:18px; font-weight:700; }
+.modal-close { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px; border-radius:6px; transition:color .2s; }
+.modal-close:hover { color:var(--text); }
+.modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:24px; }
+
+.confirm-box { max-width:380px; text-align:center; }
+.confirm-icon { font-size:40px; margin-bottom:12px; }
+.confirm-box h3 { margin-bottom:8px; }
+.confirm-box p  { color:var(--muted); font-size:14px; margin-bottom:4px; }
+
+/* â”€â”€ Toasts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+#toast-container { position:fixed; bottom:24px; right:24px; z-index:9999; display:flex; flex-direction:column; gap:8px; }
+.toast {
+  display:flex; align-items:center; gap:10px; padding:12px 18px;
+  background:var(--surface2); border:1px solid var(--border); border-radius:10px;
+  font-size:13.5px; font-weight:500; min-width:240px; box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  transform:translateX(120%); transition:transform .3s ease; pointer-events:none;
+}
+.toast.show { transform:translateX(0); }
+.toast-success { border-left:3px solid var(--success); }
+.toast-error   { border-left:3px solid var(--danger); }
+.toast-info    { border-left:3px solid var(--primary); }
+.toast-icon    { font-size:16px; }
+
+/* â”€â”€ Detail View â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.detail-item label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:4px; }
+.detail-item span  { font-size:14px; color:var(--text); }
+.detail-divider { grid-column:1/-1; border:none; border-top:1px solid var(--border); margin:4px 0; }
+
+.record-card {
+  background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:12px;
+}
+.record-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+
+/* â”€â”€ Page Titles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.page-header { margin-bottom:24px; }
+.page-header h1 { font-size:24px; font-weight:800; margin-bottom:4px; }
+.page-header p  { color:var(--muted); font-size:14px; }
+
+/* â”€â”€ Empty State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.empty-state { text-align:center; padding:48px 24px; }
+.empty-state .empty-icon { font-size:48px; margin-bottom:12px; }
+.empty-state h3 { font-weight:600; margin-bottom:6px; }
+.empty-state p  { color:var(--muted); font-size:14px; }
+
+/* â”€â”€ Section tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.tabs { display:flex; gap:4px; background:var(--surface2); border-radius:10px; padding:4px; margin-bottom:20px; width:fit-content; }
+.tab-btn { padding:8px 18px; border-radius:7px; border:none; background:none; color:var(--muted); font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; font-family:inherit; }
+.tab-btn.active { background:var(--surface); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,0.3); }
+
+/* â”€â”€ Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+@keyframes spin    { to { transform:rotate(360deg); } }
+
+.fade-in { animation:fadeIn .3s ease; }
+
+/* â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@media (max-width:768px) {
+  :root { --sidebar-w:0px; }
+  #sidebar { transform:translateX(-240px); width:240px; }
+  #sidebar.open { transform:translateX(0); }
+  #topbar { left:0; }
+  #content { margin-left:0; padding:16px; }
+  .form-row { grid-template-columns:1fr; }
+  .detail-grid { grid-template-columns:1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">🏥</div>
+      <div><h1>Ghotra's Hospital</h1><span>Hospital Management System v1.0</span></div>
+    </div>
+    <h2>Sign In</h2>
+    <p>Enter your credentials to access the system</p>
+    <div class="demo-creds">
+      <strong>Demo Credentials — click to fill</strong>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
+        <button class="btn btn-outline btn-sm demo-btn" data-user="admin"     data-pass="admin123">🛡 Admin</button>
+        <button class="btn btn-outline btn-sm demo-btn" data-user="dr.sharma" data-pass="doctor123">🩺 Doctor</button>
+        <button class="btn btn-outline btn-sm demo-btn" data-user="reception" data-pass="reception123">📋 Reception</button>
+        <button class="btn btn-outline btn-sm demo-btn" data-user="patient1"  data-pass="patient123">👤 Patient</button>
+      </div>
+    </div>
+    <form id="login-form">
+      <div class="form-group">
+        <label for="login-username">Username</label>
+        <input id="login-username" class="form-control" type="text" placeholder="Enter username" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input id="login-password" class="form-control" type="password" placeholder="Enter password" autocomplete="off">
+      </div>
+      <div id="login-error" style="color:var(--danger);font-size:13px;margin-bottom:10px;min-height:18px"></div>
+      <button type="submit" class="btn btn-primary btn-full">🔐 Sign In</button>
+    </form>
+  </div>
+</div>
+
+<div id="main-app" style="display:none">
+  <nav id="sidebar"></nav>
+  <header id="topbar">
+    <button id="menu-toggle" class="btn btn-outline btn-sm" style="display:none" aria-label="Menu">☰</button>
+    <span class="topbar-title">🏥 Ghotra's Hospital</span>
+    <div class="topbar-actions">
+      <span style="font-size:13px;color:var(--muted)">Logged in as:</span>
+      <span id="topbar-user" style="font-size:13px;font-weight:600;color:var(--primary)"></span>
+    </div>
+  </header>
+  <main id="content"></main>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+'use strict';
+
+const DB = {
+  init() {
+    if (!localStorage.getItem('hms_seeded')) {
+      this._seed();
+      localStorage.setItem('hms_seeded', '1');
+    }
+  },
+
+  reset() {
+    ['users','doctors','patients','appointments','records','bills'].forEach(k => localStorage.removeItem(`hms_${k}`));
+    localStorage.removeItem('hms_seeded');
+    this.init();
+  },
+
+  _seed() {
+    this.save('users', [
+      { id:'u001', username:'admin',     password:'admin123',     role:'admin',        name:'System Administrator', email:'admin@hms.com' },
+      { id:'u002', username:'dr.sharma', password:'doctor123',    role:'doctor',       name:'Dr. Rajesh Sharma',    email:'dr.sharma@hms.com',  doctorId:'d001' },
+      { id:'u003', username:'dr.gupta',  password:'doctor123',    role:'doctor',       name:'Dr. Priya Gupta',      email:'dr.gupta@hms.com',   doctorId:'d002' },
+      { id:'u004', username:'reception', password:'reception123', role:'receptionist', name:'Anita Singh',          email:'reception@hms.com' },
+      { id:'u005', username:'patient1',  password:'patient123',   role:'patient',      name:'Rahul Kumar',          email:'rahul@email.com',    patientId:'P001' },
+      { id:'u006', username:'patient2',  password:'patient123',   role:'patient',      name:'Sneha Patel',          email:'sneha@email.com',    patientId:'P002' },
+    ]);
+    this.save('doctors', [
+      { id:'d001', name:'Dr. Rajesh Sharma', specialization:'Cardiology',  contact:'9876543210', email:'dr.sharma@hms.com', fee:500, status:'Active', joinDate:'2020-01-15' },
+      { id:'d002', name:'Dr. Priya Gupta',   specialization:'Neurology',   contact:'9876543211', email:'dr.gupta@hms.com',  fee:600, status:'Active', joinDate:'2019-06-10' },
+      { id:'d003', name:'Dr. Amit Verma',    specialization:'Orthopedics', contact:'9876543212', email:'dr.verma@hms.com',  fee:450, status:'Active', joinDate:'2021-03-20' },
+      { id:'d004', name:'Dr. Sonal Mehta',   specialization:'Pediatrics',  contact:'9876543213', email:'dr.mehta@hms.com',  fee:400, status:'Active', joinDate:'2022-07-05' },
+    ]);
+    this.save('patients', [
+      { id:'P001', name:'Rahul Kumar', address:'123 MG Road, Delhi',      contact:'9876500001', email:'rahul@email.com',  aadhaar:'123456789012', dob:'1990-05-15', gender:'Male',   bloodGroup:'O+', registeredOn:'2024-01-10' },
+      { id:'P002', name:'Sneha Patel', address:'456 Park Street, Mumbai', contact:'9876500002', email:'sneha@email.com',  aadhaar:'987654321098', dob:'1985-08-22', gender:'Female', bloodGroup:'B+', registeredOn:'2024-02-15' },
+      { id:'P003', name:'Arun Sharma', address:'789 Anna Nagar, Chennai', contact:'9876500003', email:'arun@email.com',   aadhaar:'567812345678', dob:'1978-12-03', gender:'Male',   bloodGroup:'A+', registeredOn:'2024-03-20' },
+    ]);
+    this.save('appointments', [
+      { id:'A001', patientId:'P001', patientName:'Rahul Kumar', doctorId:'d001', doctorName:'Dr. Rajesh Sharma', date:'2026-04-28', time:'10:00', status:'Scheduled', reason:'Chest pain checkup' },
+      { id:'A002', patientId:'P002', patientName:'Sneha Patel', doctorId:'d002', doctorName:'Dr. Priya Gupta',   date:'2026-04-28', time:'11:30', status:'Scheduled', reason:'Migraine headache' },
+      { id:'A003', patientId:'P003', patientName:'Arun Sharma', doctorId:'d001', doctorName:'Dr. Rajesh Sharma', date:'2026-04-27', time:'09:00', status:'Completed', reason:'Follow-up visit' },
+    ]);
+    this.save('records', [
+      { id:'MR001', patientId:'P001', doctorId:'d001', doctorName:'Dr. Rajesh Sharma', date:'2024-03-10', diagnosis:'Mild hypertension', prescription:'Amlodipine 5mg once daily\nLifestyle modifications', notes:'Follow up after 2 weeks.' },
+      { id:'MR002', patientId:'P002', doctorId:'d002', doctorName:'Dr. Priya Gupta',   date:'2024-04-05', diagnosis:'Tension headache',  prescription:'Paracetamol 500mg as needed\nRest and hydration',    notes:'Reduce screen time.' },
+    ]);
+    this.save('bills', [
+      { id:'B001', patientId:'P001', patientName:'Rahul Kumar', appointmentId:'A001', consultationFee:500, medicationCharges:200, otherCharges:100, total:800, status:'Pending', date:'2026-04-28' },
+      { id:'B002', patientId:'P003', patientName:'Arun Sharma',  appointmentId:'A003', consultationFee:500, medicationCharges:150, otherCharges:50,  total:700, status:'Paid',    date:'2026-04-27' },
+    ]);
+  },
+
+  getAll(key)      { return JSON.parse(localStorage.getItem(`hms_${key}`) || '[]'); },
+  save(key, data)  { localStorage.setItem(`hms_${key}`, JSON.stringify(data)); },
+  getById(key, id) { return this.getAll(key).find(i => i.id === id) || null; },
+
+  add(key, item) {
+    const arr = this.getAll(key);
+    arr.push(item);
+    this.save(key, arr);
+    return item;
+  },
+  update(key, id, updates) {
+    const arr = this.getAll(key);
+    const idx = arr.findIndex(i => i.id === id);
+    if (idx !== -1) { arr[idx] = { ...arr[idx], ...updates }; this.save(key, arr); return arr[idx]; }
+    return null;
+  },
+  delete(key, id) { this.save(key, this.getAll(key).filter(i => i.id !== id)); },
+
+  genId(prefix) { return prefix + Date.now().toString(36).toUpperCase().slice(-6); },
+  genPatientId() {
+    const pts = this.getAll('patients');
+    const nums = pts.map(p => parseInt(p.id.slice(1))).filter(n => !isNaN(n));
+    const next = nums.length ? Math.max(...nums) + 1 : 1;
+    return 'P' + String(next).padStart(3, '0');
+  }
+};
+
+'use strict';
+
+const Auth = {
+  KEY: 'hms_session',
+
+  login(username, password) {
+    const user = DB.getAll('users').find(u => u.username === username && u.password === password);
+    if (user) {
+      const session = { userId: user.id, role: user.role, name: user.name, username: user.username, doctorId: user.doctorId || null, patientId: user.patientId || null };
+      sessionStorage.setItem(this.KEY, JSON.stringify(session));
+      return { success: true, session };
+    }
+    return { success: false };
+  },
+
+  logout() { sessionStorage.removeItem(this.KEY); },
+  getSession() { const s = sessionStorage.getItem(this.KEY); return s ? JSON.parse(s) : null; },
+  isLoggedIn() { return !!this.getSession(); },
+  getRole() { return this.getSession()?.role || null; },
+};
+
+'use strict';
+const AdminViews = {
+
+  dashboard() {
+    const patients = DB.getAll('patients');
+    const doctors  = DB.getAll('doctors');
+    const appts    = DB.getAll('appointments');
+    const bills    = DB.getAll('bills');
+    const todayAppts = appts.filter(a => a.date === todayStr());
+    const revenue  = bills.filter(b => b.status === 'Paid').reduce((s,b) => s + b.total, 0);
+    const recentPatients = [...patients].reverse().slice(0,5);
+    const recentAppts    = [...appts].reverse().slice(0,5);
+    return `
+    <div class="page-header">
+      <h1>Admin Dashboard</h1>
+      <p>Welcome back! Here's what's happening today.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue">ðŸ‘¥</div>
+        <div><div class="stat-val">${patients.length}</div><div class="stat-label">Total Patients</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon purple">ðŸ©º</div>
+        <div><div class="stat-val">${doctors.length}</div><div class="stat-label">Doctors</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon yellow">ðŸ“…</div>
+        <div><div class="stat-val">${todayAppts.length}</div><div class="stat-label">Today's Appointments</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">ðŸ’°</div>
+        <div><div class="stat-val">â‚¹${revenue.toLocaleString()}</div><div class="stat-label">Total Revenue</div></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Recent Patients</span></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>ID</th><th>Name</th><th>Gender</th><th>Registered</th></tr></thead>
+          <tbody>${recentPatients.map(p=>`
+            <tr>
+              <td><span class="badge badge-blue">${p.id}</span></td>
+              <td>${p.name}</td>
+              <td>${p.gender}</td>
+              <td>${formatDate(p.registeredOn)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Recent Appointments</span></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>${recentAppts.map(a=>`
+            <tr>
+              <td>${a.patientName}</td>
+              <td>${a.doctorName}</td>
+              <td>${formatDate(a.date)}</td>
+              <td>${statusBadge(a.status)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table></div>
+      </div>
+    </div>`;
+  },
+
+  patients() {
+    const patients = DB.getAll('patients');
+    return `
+    <div class="page-header">
+      <h1>Patient Management</h1>
+      <p>Register and manage all patient records.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">All Patients (${patients.length})</span>
+        <button class="btn btn-primary btn-sm" id="add-patient-btn">âž• Add Patient</button>
+      </div>
+      <div class="search-bar">
+        <div class="search-input-wrap">
+          <span class="search-icon">ðŸ”</span>
+          <input type="text" id="patient-search" placeholder="Search patients...">
+        </div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Blood</th><th>Contact</th><th>Registered</th><th>Actions</th></tr></thead>
+        <tbody id="patient-table-body">
+          ${AdminViews._patientRows(patients)}
+        </tbody>
+      </table></div>
+    </div>
+    ${AdminViews._patientModal()}`;
+  },
+
+  _patientRows(patients) {
+    if (!patients.length) return `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">No patients found.</td></tr>`;
+    return patients.map(p => `
+      <tr>
+        <td><span class="badge badge-blue">${p.id}</span></td>
+        <td><strong>${p.name}</strong></td>
+        <td>${getAge(p.dob)}</td>
+        <td>${p.gender}</td>
+        <td><span class="badge badge-red">${p.bloodGroup || 'â€”'}</span></td>
+        <td>${p.contact}</td>
+        <td>${formatDate(p.registeredOn)}</td>
+        <td>
+          <button class="btn btn-outline btn-sm view-patient-btn" data-id="${p.id}">ðŸ‘ View</button>
+          <button class="btn btn-danger btn-sm del-patient-btn" data-id="${p.id}" style="margin-left:4px">ðŸ—‘</button>
+        </td>
+      </tr>`).join('');
+  },
+
+  _patientModal() {
+    return `
+    <div class="modal-overlay" id="patient-modal">
+      <div class="modal-box wide">
+        <div class="modal-header">
+          <h3 id="patient-modal-title">Add Patient</h3>
+          <button class="modal-close" id="close-patient-modal">âœ•</button>
+        </div>
+        <div id="patient-modal-body"></div>
+      </div>
+    </div>`;
+  },
+
+  patientForm(p = {}) {
+    return `
+    <form id="patient-form">
+      <div class="form-row">
+        <div class="form-group"><label>Full Name *</label><input class="form-control" name="name" value="${p.name||''}" required></div>
+        <div class="form-group"><label>Date of Birth *</label><input type="date" class="form-control" name="dob" value="${p.dob||''}" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Gender *</label>
+          <select class="form-control" name="gender" required>
+            <option value="">Select</option>
+            ${['Male','Female','Other'].map(g=>`<option ${p.gender===g?'selected':''}>${g}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group"><label>Blood Group</label>
+          <select class="form-control" name="bloodGroup">
+            <option value="">Select</option>
+            ${['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(g=>`<option ${p.bloodGroup===g?'selected':''}>${g}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Address *</label><input class="form-control" name="address" value="${p.address||''}" required></div>
+      <div class="form-row">
+        <div class="form-group"><label>Contact Number *</label><input class="form-control" name="contact" value="${p.contact||''}" required></div>
+        <div class="form-group"><label>Email</label><input type="email" class="form-control" name="email" value="${p.email||''}"></div>
+      </div>
+      <div class="form-group"><label>Aadhaar Number *</label><input class="form-control" name="aadhaar" value="${p.aadhaar||''}" maxlength="12" required></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="close-patient-modal2">Cancel</button>
+        <button type="submit" class="btn btn-primary">ðŸ’¾ Save Patient</button>
+      </div>
+    </form>`;
+  },
+
+  patientDetail(p) {
+    const records = DB.getAll('records').filter(r => r.patientId === p.id);
+    const appts   = DB.getAll('appointments').filter(a => a.patientId === p.id);
+    return `
+    <div class="detail-grid">
+      <div class="detail-item"><label>Patient ID</label><span><span class="badge badge-blue">${p.id}</span></span></div>
+      <div class="detail-item"><label>Full Name</label><span>${p.name}</span></div>
+      <div class="detail-item"><label>Date of Birth</label><span>${formatDate(p.dob)} (${getAge(p.dob)})</span></div>
+      <div class="detail-item"><label>Gender</label><span>${p.gender}</span></div>
+      <div class="detail-item"><label>Blood Group</label><span>${p.bloodGroup || 'â€”'}</span></div>
+      <div class="detail-item"><label>Contact</label><span>${p.contact}</span></div>
+      <div class="detail-item"><label>Email</label><span>${p.email || 'â€”'}</span></div>
+      <div class="detail-item"><label>Aadhaar</label><span>${p.aadhaar}</span></div>
+      <hr class="detail-divider">
+      <div class="detail-item" style="grid-column:1/-1"><label>Address</label><span>${p.address}</span></div>
+      <div class="detail-item"><label>Registered On</label><span>${formatDate(p.registeredOn)}</span></div>
+    </div>
+    <h4 style="margin:20px 0 10px;font-size:14px;">Appointments (${appts.length})</h4>
+    ${appts.length ? appts.map(a=>`
+      <div class="record-card">
+        <div class="record-card-header">
+          <span>${a.doctorName}</span>${statusBadge(a.status)}
+        </div>
+        <span style="color:var(--muted);font-size:13px">${formatDate(a.date)} at ${a.time} â€” ${a.reason}</span>
+      </div>`).join('') : '<p style="color:var(--muted);font-size:13px">No appointments.</p>'}
+    <h4 style="margin:20px 0 10px;font-size:14px;">Medical Records (${records.length})</h4>
+    ${records.length ? records.map(r=>`
+      <div class="record-card">
+        <div class="record-card-header"><span>${r.doctorName}</span><span style="color:var(--muted);font-size:12px">${formatDate(r.date)}</span></div>
+        <p style="font-size:13px;margin-bottom:4px"><strong>Diagnosis:</strong> ${r.diagnosis}</p>
+        <p style="font-size:13px;color:var(--muted)"><strong>Prescription:</strong> ${r.prescription}</p>
+      </div>`).join('') : '<p style="color:var(--muted);font-size:13px">No records.</p>'}`;
+  },
+
+  doctors() {
+    const doctors = DB.getAll('doctors');
+    return `
+    <div class="page-header">
+      <h1>Doctor Management</h1>
+      <p>Add and manage hospital doctors.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">All Doctors (${doctors.length})</span>
+        <button class="btn btn-primary btn-sm" id="add-doctor-btn">âž• Add Doctor</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Name</th><th>Specialization</th><th>Contact</th><th>Fee</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="doctor-table-body">${AdminViews._doctorRows(doctors)}</tbody>
+      </table></div>
+    </div>
+    <div class="modal-overlay" id="doctor-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3 id="doctor-modal-title">Add Doctor</h3>
+          <button class="modal-close" id="close-doctor-modal">âœ•</button>
+        </div>
+        <div id="doctor-modal-body"></div>
+      </div>
+    </div>`;
+  },
+
+  _doctorRows(doctors) {
+    if (!doctors.length) return `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px">No doctors found.</td></tr>`;
+    return doctors.map(d => `
+      <tr>
+        <td><span class="badge badge-purple">${d.id}</span></td>
+        <td><strong>${d.name}</strong></td>
+        <td>${d.specialization}</td>
+        <td>${d.contact}</td>
+        <td>â‚¹${d.fee}</td>
+        <td>${statusBadge(d.status)}</td>
+        <td>
+          <button class="btn btn-outline btn-sm edit-doctor-btn" data-id="${d.id}">âœï¸ Edit</button>
+          <button class="btn btn-danger btn-sm del-doctor-btn" data-id="${d.id}" style="margin-left:4px">ðŸ—‘</button>
+        </td>
+      </tr>`).join('');
+  },
+
+  doctorForm(d = {}) {
+    return `
+    <form id="doctor-form">
+      <div class="form-row">
+        <div class="form-group"><label>Full Name *</label><input class="form-control" name="name" value="${d.name||''}" required></div>
+        <div class="form-group"><label>Specialization *</label><input class="form-control" name="specialization" value="${d.specialization||''}" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Contact *</label><input class="form-control" name="contact" value="${d.contact||''}" required></div>
+        <div class="form-group"><label>Email *</label><input type="email" class="form-control" name="email" value="${d.email||''}" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Consultation Fee (â‚¹) *</label><input type="number" class="form-control" name="fee" value="${d.fee||''}" required></div>
+        <div class="form-group"><label>Status</label>
+          <select class="form-control" name="status">
+            ${['Active','Inactive'].map(s=>`<option ${(d.status||'Active')===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="close-doctor-modal2">Cancel</button>
+        <button type="submit" class="btn btn-primary">ðŸ’¾ Save Doctor</button>
+      </div>
+    </form>`;
+  },
+
+  appointments() {
+    const appts = DB.getAll('appointments');
+    return `
+    <div class="page-header">
+      <h1>Appointment Management</h1>
+      <p>View and manage all appointments.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">All Appointments (${appts.length})</span>
+        <div style="display:flex;gap:8px">
+          <select class="form-control" id="appt-filter" style="width:auto;padding:8px 12px">
+            <option value="">All Status</option>
+            <option>Scheduled</option><option>Completed</option><option>Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="appt-table-body">${AdminViews._apptRows(appts)}</tbody>
+      </table></div>
+    </div>`;
+  },
+
+  _apptRows(appts) {
+    if (!appts.length) return `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">No appointments found.</td></tr>`;
+    return appts.map(a => `
+      <tr>
+        <td><span class="badge badge-gray">${a.id}</span></td>
+        <td>${a.patientName}</td>
+        <td>${a.doctorName}</td>
+        <td>${formatDate(a.date)}</td>
+        <td>${a.time}</td>
+        <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${a.reason}">${a.reason}</td>
+        <td>${statusBadge(a.status)}</td>
+        <td>
+          <select class="form-control btn-sm status-change" data-id="${a.id}" style="padding:5px 8px;width:auto">
+            ${['Scheduled','Completed','Cancelled'].map(s=>`<option ${a.status===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </td>
+      </tr>`).join('');
+  },
+
+  billing() {
+    const bills = DB.getAll('bills');
+    const total = bills.reduce((s,b) => s + b.total, 0);
+    const paid  = bills.filter(b => b.status === 'Paid').reduce((s,b) => s + b.total, 0);
+    return `
+    <div class="page-header">
+      <h1>Billing Management</h1>
+      <p>Manage patient bills and payments.</p>
+    </div>
+    <div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat-card"><div class="stat-icon blue">ðŸ“„</div><div><div class="stat-val">${bills.length}</div><div class="stat-label">Total Bills</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">âœ…</div><div><div class="stat-val">â‚¹${paid.toLocaleString()}</div><div class="stat-label">Collected</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">â³</div><div><div class="stat-val">â‚¹${(total-paid).toLocaleString()}</div><div class="stat-label">Pending</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">All Bills</span>
+        <button class="btn btn-primary btn-sm" id="gen-bill-btn">âž• Generate Bill</button>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Bill ID</th><th>Patient</th><th>Date</th><th>Consult</th><th>Medicine</th><th>Other</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="bill-table-body">${AdminViews._billRows(bills)}</tbody>
+      </table></div>
+    </div>
+    <div class="modal-overlay" id="bill-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>Generate Bill</h3>
+          <button class="modal-close" id="close-bill-modal">âœ•</button>
+        </div>
+        <div id="bill-modal-body">${AdminViews._billForm()}</div>
+      </div>
+    </div>`;
+  },
+
+  _billRows(bills) {
+    if (!bills.length) return `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:32px">No bills found.</td></tr>`;
+    return bills.map(b => `
+      <tr>
+        <td><span class="badge badge-gray">${b.id}</span></td>
+        <td>${b.patientName}</td>
+        <td>${formatDate(b.date)}</td>
+        <td>â‚¹${b.consultationFee}</td>
+        <td>â‚¹${b.medicationCharges}</td>
+        <td>â‚¹${b.otherCharges}</td>
+        <td><strong>â‚¹${b.total}</strong></td>
+        <td>${statusBadge(b.status)}</td>
+        <td>${b.status==='Pending' ? `<button class="btn btn-success btn-sm mark-paid-btn" data-id="${b.id}">âœ“ Paid</button>` : 'â€”'}</td>
+      </tr>`).join('');
+  },
+
+  _billForm() {
+    const patients = DB.getAll('patients');
+    const appts    = DB.getAll('appointments');
+    return `
+    <form id="bill-form">
+      <div class="form-group"><label>Patient *</label>
+        <select class="form-control" name="patientId" required>
+          <option value="">Select Patient</option>
+          ${patients.map(p=>`<option value="${p.id}">${p.name} (${p.id})</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label>Appointment ID (optional)</label>
+        <select class="form-control" name="appointmentId">
+          <option value="">None</option>
+          ${appts.map(a=>`<option value="${a.id}">${a.id} â€” ${a.patientName} â€” ${a.date}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Consultation Fee (â‚¹) *</label><input type="number" class="form-control" name="consultationFee" value="0" required></div>
+        <div class="form-group"><label>Medication Charges (â‚¹)</label><input type="number" class="form-control" name="medicationCharges" value="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Other Charges (â‚¹)</label><input type="number" class="form-control" name="otherCharges" value="0"></div>
+        <div class="form-group"><label>Total (â‚¹)</label><input type="number" class="form-control" name="total" id="bill-total" readonly style="background:rgba(56,189,248,0.07)"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="close-bill-modal2">Cancel</button>
+        <button type="submit" class="btn btn-primary">ðŸ’¾ Generate Bill</button>
+      </div>
+    </form>`;
+  }
+};
+
+'use strict';
+const DoctorViews = {
+
+  dashboard() {
+    const session = Auth.getSession();
+    const appts = DB.getAll('appointments').filter(a => a.doctorId === session.doctorId);
+    const todayAppts = appts.filter(a => a.date === todayStr());
+    const patients = [...new Set(appts.map(a => a.patientId))];
+    return `
+    <div class="page-header">
+      <h1>Welcome, ${session.name}</h1>
+      <p>Here's your schedule and patient summary.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-icon blue">ðŸ“…</div><div><div class="stat-val">${todayAppts.length}</div><div class="stat-label">Today's Appointments</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">ðŸ‘¥</div><div><div class="stat-val">${patients.length}</div><div class="stat-label">My Patients</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">ðŸ“‹</div><div><div class="stat-val">${appts.filter(a=>a.status==='Completed').length}</div><div class="stat-label">Completed</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Today's Schedule (${formatDate(todayStr())})</span></div>
+      ${todayAppts.length ? `<div class="table-wrap"><table>
+        <thead><tr><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>${todayAppts.map(a=>`
+          <tr>
+            <td><strong>${a.time}</strong></td>
+            <td>${a.patientName}</td>
+            <td>${a.reason}</td>
+            <td>${statusBadge(a.status)}</td>
+            <td><button class="btn btn-outline btn-sm doctor-view-records" data-pid="${a.patientId}" data-pname="${a.patientName}">ðŸ“‹ Records</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>` : `<div class="empty-state"><div class="empty-icon">âœ…</div><h3>No appointments today</h3></div>`}
+    </div>`;
+  },
+
+  patients() {
+    const session = Auth.getSession();
+    const appts   = DB.getAll('appointments').filter(a => a.doctorId === session.doctorId);
+    const pidSet  = [...new Set(appts.map(a => a.patientId))];
+    const patients = pidSet.map(id => DB.getById('patients', id)).filter(Boolean);
+    return `
+    <div class="page-header">
+      <h1>My Patients</h1>
+      <p>Patients assigned to you via appointments.</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Patients (${patients.length})</span></div>
+      ${patients.length ? `<div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Contact</th><th>Actions</th></tr></thead>
+        <tbody>${patients.map(p=>`
+          <tr>
+            <td><span class="badge badge-blue">${p.id}</span></td>
+            <td><strong>${p.name}</strong></td>
+            <td>${getAge(p.dob)}</td>
+            <td>${p.gender}</td>
+            <td>${p.contact}</td>
+            <td><button class="btn btn-primary btn-sm doctor-view-records" data-pid="${p.id}" data-pname="${p.name}">ðŸ“‹ View Records</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>` : `<div class="empty-state"><div class="empty-icon">ðŸ‘¥</div><h3>No patients yet</h3></div>`}
+    </div>`;
+  },
+
+  records(params) {
+    const { patientId, patientName } = params;
+    const records = DB.getAll('records').filter(r => r.patientId === patientId);
+    const patient = DB.getById('patients', patientId);
+    return `
+    <div class="page-header">
+      <h1>Medical Records</h1>
+      <p>Patient: <strong>${patientName || patientId}</strong></p>
+    </div>
+    ${patient ? `<div class="card" style="margin-bottom:16px">
+      <div class="detail-grid">
+        <div class="detail-item"><label>Patient ID</label><span><span class="badge badge-blue">${patient.id}</span></span></div>
+        <div class="detail-item"><label>Name</label><span>${patient.name}</span></div>
+        <div class="detail-item"><label>Age / Gender</label><span>${getAge(patient.dob)} / ${patient.gender}</span></div>
+        <div class="detail-item"><label>Blood Group</label><span>${patient.bloodGroup || 'â€”'}</span></div>
+        <div class="detail-item"><label>Contact</label><span>${patient.contact}</span></div>
+        <div class="detail-item"><label>Address</label><span>${patient.address}</span></div>
+      </div>
+    </div>` : ''}
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Medical Records (${records.length})</span>
+        <button class="btn btn-primary btn-sm" id="add-record-btn" data-pid="${patientId}">âž• Add Record</button>
+      </div>
+      <div id="records-list">${DoctorViews._recordsList(records)}</div>
+    </div>
+    <div class="modal-overlay" id="record-modal">
+      <div class="modal-box">
+        <div class="modal-header"><h3>Add Medical Record</h3><button class="modal-close" id="close-record-modal">âœ•</button></div>
+        <div id="record-modal-body"></div>
+      </div>
+    </div>`;
+  },
+
+  _recordsList(records) {
+    if (!records.length) return `<div class="empty-state"><div class="empty-icon">ðŸ“‹</div><h3>No records yet</h3><p>Add a new medical record above.</p></div>`;
+    return records.map(r => `
+      <div class="record-card">
+        <div class="record-card-header">
+          <strong>${r.diagnosis}</strong>
+          <span style="color:var(--muted);font-size:12px">${formatDate(r.date)}</span>
+        </div>
+        <p style="font-size:13px;margin-bottom:6px;color:var(--muted)">By ${r.doctorName}</p>
+        <p style="font-size:13px;margin-bottom:4px"><strong>Prescription:</strong></p>
+        <pre style="font-size:12.5px;white-space:pre-wrap;color:var(--text);background:var(--bg);border-radius:8px;padding:10px">${r.prescription}</pre>
+        ${r.notes ? `<p style="font-size:13px;margin-top:6px;color:var(--muted)"><strong>Notes:</strong> ${r.notes}</p>` : ''}
+      </div>`).join('');
+  },
+
+  recordForm(patientId) {
+    return `
+    <form id="record-form" data-pid="${patientId}">
+      <div class="form-group"><label>Diagnosis *</label><input class="form-control" name="diagnosis" placeholder="e.g. Hypertension" required></div>
+      <div class="form-group"><label>Prescription *</label><textarea class="form-control" name="prescription" rows="4" placeholder="Enter medicines, dosage..." required style="resize:vertical"></textarea></div>
+      <div class="form-group"><label>Notes</label><textarea class="form-control" name="notes" rows="3" placeholder="Additional notes..." style="resize:vertical"></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="close-record-modal2">Cancel</button>
+        <button type="submit" class="btn btn-primary">ðŸ’¾ Save Record</button>
+      </div>
+    </form>`;
+  }
+};
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RECEPTIONIST VIEWS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+const RecepViews = {
+
+  dashboard() {
+    const appts    = DB.getAll('appointments');
+    const patients = DB.getAll('patients');
+    const todayAppts = appts.filter(a => a.date === todayStr());
+    return `
+    <div class="page-header">
+      <h1>Receptionist Dashboard</h1>
+      <p>Manage patient registrations and appointments.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-icon blue">ðŸ‘¥</div><div><div class="stat-val">${patients.length}</div><div class="stat-label">Total Patients</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">ðŸ“…</div><div><div class="stat-val">${todayAppts.length}</div><div class="stat-label">Today's Appointments</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">âœ…</div><div><div class="stat-val">${todayAppts.filter(a=>a.status==='Completed').length}</div><div class="stat-label">Completed Today</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Today's Appointments</span></div>
+      ${todayAppts.length ? `<div class="table-wrap"><table>
+        <thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Reason</th><th>Status</th></tr></thead>
+        <tbody>${todayAppts.map(a=>`
+          <tr>
+            <td><strong>${a.time}</strong></td>
+            <td>${a.patientName}</td>
+            <td>${a.doctorName}</td>
+            <td>${a.reason}</td>
+            <td>${statusBadge(a.status)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>` : `<div class="empty-state"><div class="empty-icon">ðŸ“…</div><h3>No appointments today</h3></div>`}
+    </div>`;
+  },
+
+  register() {
+    return `
+    <div class="page-header">
+      <h1>Register Patient</h1>
+      <p>Fill in the details to register a new patient.</p>
+    </div>
+    <div class="card" style="max-width:680px">
+      <div class="card-header"><span class="card-title">Patient Registration Form</span></div>
+      <form id="register-form">
+        <div class="form-row">
+          <div class="form-group"><label>Full Name *</label><input class="form-control" name="name" required></div>
+          <div class="form-group"><label>Date of Birth *</label><input type="date" class="form-control" name="dob" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Gender *</label>
+            <select class="form-control" name="gender" required>
+              <option value="">Select</option>
+              <option>Male</option><option>Female</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Blood Group</label>
+            <select class="form-control" name="bloodGroup">
+              <option value="">Select</option>
+              ${['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(g=>`<option>${g}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Address *</label><input class="form-control" name="address" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Contact Number *</label><input class="form-control" name="contact" maxlength="10" required></div>
+          <div class="form-group"><label>Email</label><input type="email" class="form-control" name="email"></div>
+        </div>
+        <div class="form-group"><label>Aadhaar Number * (12 digits)</label><input class="form-control" name="aadhaar" maxlength="12" minlength="12" required></div>
+        <div id="register-error" style="color:var(--danger);font-size:13px;margin-bottom:8px"></div>
+        <button type="submit" class="btn btn-primary">âœ… Register Patient</button>
+      </form>
+    </div>
+    <div class="modal-overlay" id="success-modal">
+      <div class="modal-box confirm-box">
+        <div class="confirm-icon">ðŸŽ‰</div>
+        <h3>Patient Registered!</h3>
+        <p id="success-msg"></p>
+        <div class="modal-actions" style="justify-content:center">
+          <button class="btn btn-primary" id="close-success-modal">Done</button>
+        </div>
+      </div>
+    </div>`;
+  },
+
+  appointments() {
+    const appts   = DB.getAll('appointments');
+    const patients = DB.getAll('patients');
+    const doctors  = DB.getAll('doctors');
+    return `
+    <div class="page-header">
+      <h1>Book Appointment</h1>
+      <p>Schedule appointments for patients.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:20px">
+      <div class="card">
+        <div class="card-header"><span class="card-title">Book New Appointment</span></div>
+        <form id="book-appt-form">
+          <div class="form-group"><label>Patient *</label>
+            <select class="form-control" name="patientId" required>
+              <option value="">Select Patient</option>
+              ${patients.map(p=>`<option value="${p.id}">${p.name} (${p.id})</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group"><label>Doctor *</label>
+            <select class="form-control" name="doctorId" required>
+              <option value="">Select Doctor</option>
+              ${doctors.filter(d=>d.status==='Active').map(d=>`<option value="${d.id}">${d.name} â€” ${d.specialization}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Date *</label><input type="date" class="form-control" name="date" min="${todayStr()}" required></div>
+            <div class="form-group"><label>Time *</label><input type="time" class="form-control" name="time" required></div>
+          </div>
+          <div class="form-group"><label>Reason *</label><input class="form-control" name="reason" placeholder="Reason for visit" required></div>
+          <div id="appt-error" style="color:var(--danger);font-size:13px;margin-bottom:8px"></div>
+          <button type="submit" class="btn btn-primary btn-full">ðŸ“… Book Appointment</button>
+        </form>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">All Appointments</span></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th></tr></thead>
+          <tbody>${appts.map(a=>`
+            <tr>
+              <td>${a.patientName}</td>
+              <td>${a.doctorName}</td>
+              <td>${formatDate(a.date)}</td>
+              <td>${a.time}</td>
+              <td>${statusBadge(a.status)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table></div>
+      </div>
+    </div>`;
+  }
+};
+
+'use strict';
+const PatientViews = {
+
+  dashboard() {
+    const session = Auth.getSession();
+    const patientId = session.patientId;
+    const patient = DB.getById('patients', patientId);
+    const appts   = DB.getAll('appointments').filter(a => a.patientId === patientId);
+    const records = DB.getAll('records').filter(r => r.patientId === patientId);
+    const bills   = DB.getAll('bills').filter(b => b.patientId === patientId);
+    const upcoming = appts.filter(a => a.status === 'Scheduled' && a.date >= todayStr());
+    return `
+    <div class="page-header">
+      <h1>Welcome, ${session.name}</h1>
+      <p>Your health dashboard â€” everything in one place.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-icon blue">ðŸ“…</div><div><div class="stat-val">${upcoming.length}</div><div class="stat-label">Upcoming Appointments</div></div></div>
+      <div class="stat-card"><div class="stat-icon purple">ðŸ“‹</div><div><div class="stat-val">${records.length}</div><div class="stat-label">Medical Records</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">ðŸ’³</div><div><div class="stat-val">â‚¹${bills.filter(b=>b.status==='Pending').reduce((s,b)=>s+b.total,0).toLocaleString()}</div><div class="stat-label">Pending Bills</div></div></div>
+    </div>
+    ${patient ? `
+    <div class="card">
+      <div class="card-header"><span class="card-title">My Profile</span></div>
+      <div class="detail-grid">
+        <div class="detail-item"><label>Patient ID</label><span><span class="badge badge-blue">${patient.id}</span></span></div>
+        <div class="detail-item"><label>Name</label><span>${patient.name}</span></div>
+        <div class="detail-item"><label>Date of Birth</label><span>${formatDate(patient.dob)} (${getAge(patient.dob)})</span></div>
+        <div class="detail-item"><label>Gender</label><span>${patient.gender}</span></div>
+        <div class="detail-item"><label>Blood Group</label><span>${patient.bloodGroup || 'â€”'}</span></div>
+        <div class="detail-item"><label>Contact</label><span>${patient.contact}</span></div>
+        <div class="detail-item"><label>Email</label><span>${patient.email || 'â€”'}</span></div>
+        <div class="detail-item"><label>Aadhaar</label><span>${patient.aadhaar}</span></div>
+        <hr class="detail-divider">
+        <div class="detail-item" style="grid-column:1/-1"><label>Address</label><span>${patient.address}</span></div>
+      </div>
+    </div>` : ''}
+    <div class="card">
+      <div class="card-header"><span class="card-title">Upcoming Appointments</span></div>
+      ${upcoming.length ? `<div class="table-wrap"><table>
+        <thead><tr><th>Date</th><th>Time</th><th>Doctor</th><th>Reason</th><th>Status</th></tr></thead>
+        <tbody>${upcoming.map(a=>`
+          <tr>
+            <td>${formatDate(a.date)}</td>
+            <td>${a.time}</td>
+            <td>${a.doctorName}</td>
+            <td>${a.reason}</td>
+            <td>${statusBadge(a.status)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>` : `<div class="empty-state"><div class="empty-icon">ðŸ“…</div><h3>No upcoming appointments</h3><p>Contact the reception to book one.</p></div>`}
+    </div>`;
+  },
+
+  records() {
+    const session = Auth.getSession();
+    const records = DB.getAll('records').filter(r => r.patientId === session.patientId);
+    return `
+    <div class="page-header">
+      <h1>My Medical Records</h1>
+      <p>Your complete medical history.</p>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Records (${records.length})</span></div>
+      ${records.length ? records.map(r=>`
+        <div class="record-card">
+          <div class="record-card-header">
+            <strong>${r.diagnosis}</strong>
+            <span style="color:var(--muted);font-size:12px">${formatDate(r.date)}</span>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:8px">By ${r.doctorName}</p>
+          <p style="font-size:13px;margin-bottom:4px"><strong>Prescription:</strong></p>
+          <pre style="font-size:12.5px;white-space:pre-wrap;color:var(--text);background:var(--bg);border-radius:8px;padding:10px">${r.prescription}</pre>
+          ${r.notes ? `<p style="font-size:13px;margin-top:8px;color:var(--muted)"><strong>Notes:</strong> ${r.notes}</p>` : ''}
+        </div>`).join('')
+      : `<div class="empty-state"><div class="empty-icon">ðŸ“‹</div><h3>No records yet</h3><p>Your doctor will add records after your visit.</p></div>`}
+    </div>`;
+  },
+
+  bills() {
+    const session = Auth.getSession();
+    const bills = DB.getAll('bills').filter(b => b.patientId === session.patientId);
+    const totalPending = bills.filter(b=>b.status==='Pending').reduce((s,b)=>s+b.total,0);
+    return `
+    <div class="page-header">
+      <h1>My Bills</h1>
+      <p>View all your billing details.</p>
+    </div>
+    ${totalPending > 0 ? `<div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:12px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:20px">âš ï¸</span>
+      <span style="font-size:14px">You have <strong>â‚¹${totalPending.toLocaleString()}</strong> in pending bills. Please visit the reception to pay.</span>
+    </div>` : ''}
+    <div class="card">
+      <div class="card-header"><span class="card-title">Bills (${bills.length})</span></div>
+      ${bills.length ? `<div class="table-wrap"><table>
+        <thead><tr><th>Bill ID</th><th>Date</th><th>Consult</th><th>Medicine</th><th>Other</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>${bills.map(b=>`
+          <tr>
+            <td><span class="badge badge-gray">${b.id}</span></td>
+            <td>${formatDate(b.date)}</td>
+            <td>â‚¹${b.consultationFee}</td>
+            <td>â‚¹${b.medicationCharges}</td>
+            <td>â‚¹${b.otherCharges}</td>
+            <td><strong>â‚¹${b.total}</strong></td>
+            <td>${statusBadge(b.status)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>`
+      : `<div class="empty-state"><div class="empty-icon">ðŸ’³</div><h3>No bills found</h3></div>`}
+    </div>`;
+  }
+};
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   VIEWS BRIDGE â€” maps Router calls to role views
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+const Views = {
+  // Admin
+  adminDashboard()    { return AdminViews.dashboard(); },
+  adminDashboardInit(){ /* static */ },
+  adminPatients()     { return AdminViews.patients(); },
+  adminPatientsInit() {
+    const search = qs('#patient-search');
+    if (search) search.addEventListener('input', () => {
+      const q = search.value.toLowerCase();
+      const filtered = DB.getAll('patients').filter(p =>
+        p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q) || p.contact.includes(q)
+      );
+      qs('#patient-table-body').innerHTML = AdminViews._patientRows(filtered);
+      attachPatientActions();
+    });
+    qs('#add-patient-btn').addEventListener('click', () => {
+      qs('#patient-modal-title').textContent = 'Add Patient';
+      qs('#patient-modal-body').innerHTML = AdminViews.patientForm();
+      qs('#patient-modal').classList.add('active');
+      qs('#close-patient-modal2').onclick = () => qs('#patient-modal').classList.remove('active');
+      qs('#patient-form').onsubmit = e => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        const data = Object.fromEntries(fd);
+        const existing = DB.getAll('patients').find(p => p.aadhaar === data.aadhaar);
+        if (existing) { toast('Patient with this Aadhaar already exists!','error'); return; }
+        DB.add('patients', { ...data, id: DB.genPatientId(), registeredOn: todayStr() });
+        qs('#patient-modal').classList.remove('active');
+        toast('Patient registered successfully!');
+        Router.navigate('admin-patients');
+      };
+    });
+    qs('#close-patient-modal').onclick = () => qs('#patient-modal').classList.remove('active');
+    attachPatientActions();
+  },
+  adminDoctors()      { return AdminViews.doctors(); },
+  adminDoctorsInit()  {
+    qs('#add-doctor-btn').addEventListener('click', () => {
+      qs('#doctor-modal-title').textContent = 'Add Doctor';
+      qs('#doctor-modal-body').innerHTML = AdminViews.doctorForm();
+      qs('#doctor-modal').classList.add('active');
+      qs('#close-doctor-modal2').onclick = () => qs('#doctor-modal').classList.remove('active');
+      qs('#doctor-form').onsubmit = e => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(e.target));
+        data.fee = parseInt(data.fee);
+        data.id  = DB.genId('d');
+        data.joinDate = todayStr();
+        DB.add('doctors', data);
+        qs('#doctor-modal').classList.remove('active');
+        toast('Doctor added!');
+        Router.navigate('admin-doctors');
+      };
+    });
+    qs('#close-doctor-modal').onclick = () => qs('#doctor-modal').classList.remove('active');
+    attachDoctorActions();
+  },
+  adminAppointments()     { return AdminViews.appointments(); },
+  adminAppointmentsInit() {
+    qs('#appt-filter').addEventListener('change', e => {
+      const val = e.target.value;
+      const all = DB.getAll('appointments');
+      const filtered = val ? all.filter(a => a.status === val) : all;
+      qs('#appt-table-body').innerHTML = AdminViews._apptRows(filtered);
+      attachApptActions();
+    });
+    attachApptActions();
+  },
+  adminBilling()     { return AdminViews.billing(); },
+  adminBillingInit() {
+    qs('#gen-bill-btn').addEventListener('click', () => qs('#bill-modal').classList.add('active'));
+    qs('#close-bill-modal').onclick  = () => qs('#bill-modal').classList.remove('active');
+    qs('#close-bill-modal2').onclick = () => qs('#bill-modal').classList.remove('active');
+    // Auto-calculate total
+    ['consultationFee','medicationCharges','otherCharges'].forEach(name => {
+      const el = qs(`[name="${name}"]`);
+      if (el) el.addEventListener('input', calcTotal);
+    });
+    qs('#bill-form').onsubmit = e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      ['consultationFee','medicationCharges','otherCharges','total'].forEach(k => data[k] = parseInt(data[k]) || 0);
+      const patient = DB.getById('patients', data.patientId);
+      DB.add('bills', { ...data, id: DB.genId('B'), patientName: patient.name, status:'Pending', date: todayStr() });
+      qs('#bill-modal').classList.remove('active');
+      toast('Bill generated!');
+      Router.navigate('admin-billing');
+    };
+    attachBillActions();
+  },
+
+  // Doctor
+  doctorDashboard()    { return DoctorViews.dashboard(); },
+  doctorDashboardInit(){ attachDoctorRecordBtns(); },
+  doctorPatients()     { return DoctorViews.patients(); },
+  doctorPatientsInit() { attachDoctorRecordBtns(); },
+  doctorRecords(p)     { return DoctorViews.records(p); },
+  doctorRecordsInit(p) {
+    qs('#add-record-btn').addEventListener('click', () => {
+      qs('#record-modal-body').innerHTML = DoctorViews.recordForm(p.patientId);
+      qs('#record-modal').classList.add('active');
+      qs('#close-record-modal2').onclick = () => qs('#record-modal').classList.remove('active');
+      qs('#record-form').onsubmit = e => {
+        e.preventDefault();
+        const session = Auth.getSession();
+        const data    = Object.fromEntries(new FormData(e.target));
+        DB.add('records', { ...data, id: DB.genId('MR'), patientId: p.patientId, doctorId: session.doctorId, doctorName: session.name, date: todayStr() });
+        qs('#record-modal').classList.remove('active');
+        toast('Record added!');
+        Router.navigate('doctor-records', p);
+      };
+    });
+    qs('#close-record-modal').onclick = () => qs('#record-modal').classList.remove('active');
+  },
+
+  // Receptionist
+  recepDashboard()    { return RecepViews.dashboard(); },
+  recepDashboardInit(){ },
+  recepRegister()     { return RecepViews.register(); },
+  recepRegisterInit() {
+    qs('#register-form').onsubmit = e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const dup  = DB.getAll('patients').find(p => p.aadhaar === data.aadhaar);
+      if (dup) { qs('#register-error').textContent = 'âš  Patient with this Aadhaar already exists.'; return; }
+      const id = DB.genPatientId();
+      DB.add('patients', { ...data, id, registeredOn: todayStr() });
+      qs('#success-msg').textContent = `Patient registered with ID: ${id}`;
+      qs('#success-modal').classList.add('active');
+      qs('#register-form').reset();
+      qs('#register-error').textContent = '';
+    };
+    qs('#close-success-modal').onclick = () => qs('#success-modal').classList.remove('active');
+  },
+  recepAppointments()     { return RecepViews.appointments(); },
+  recepAppointmentsInit() {
+    qs('#book-appt-form').onsubmit = e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const clash = DB.getAll('appointments').find(a => a.doctorId===data.doctorId && a.date===data.date && a.time===data.time && a.status!=='Cancelled');
+      if (clash) { qs('#appt-error').textContent = 'âš  Doctor already has an appointment at this time.'; return; }
+      const patient = DB.getById('patients', data.patientId);
+      const doctor  = DB.getById('doctors',  data.doctorId);
+      DB.add('appointments', { ...data, id: DB.genId('A'), patientName: patient.name, doctorName: doctor.name, status:'Scheduled' });
+      toast('Appointment booked!');
+      Router.navigate('recep-appointments');
+    };
+  },
+
+  // Patient
+  patientDashboard()    { return PatientViews.dashboard(); },
+  patientDashboardInit(){ },
+  patientRecords()      { return PatientViews.records(); },
+  patientRecordsInit()  { },
+  patientBills()        { return PatientViews.bills(); },
+  patientBillsInit()    { },
+};
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SHARED ACTION ATTACHERS
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+function attachPatientActions() {
+  qsa('.view-patient-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = DB.getById('patients', btn.dataset.id);
+      qs('#patient-modal-title').textContent = `Patient: ${p.name}`;
+      qs('#patient-modal-body').innerHTML = AdminViews.patientDetail(p);
+      qs('#patient-modal').classList.add('active');
+    });
+  });
+  qsa('.del-patient-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (await confirmDialog('Delete this patient? This cannot be undone.')) {
+        DB.delete('patients', btn.dataset.id);
+        toast('Patient deleted.', 'info');
+        Router.navigate('admin-patients');
+      }
+    });
+  });
+}
+
+function attachDoctorActions() {
+  qsa('.edit-doctor-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = DB.getById('doctors', btn.dataset.id);
+      qs('#doctor-modal-title').textContent = 'Edit Doctor';
+      qs('#doctor-modal-body').innerHTML = AdminViews.doctorForm(d);
+      qs('#doctor-modal').classList.add('active');
+      qs('#close-doctor-modal2').onclick = () => qs('#doctor-modal').classList.remove('active');
+      qs('#doctor-form').onsubmit = e => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(e.target));
+        data.fee = parseInt(data.fee);
+        DB.update('doctors', d.id, data);
+        qs('#doctor-modal').classList.remove('active');
+        toast('Doctor updated!');
+        Router.navigate('admin-doctors');
+      };
+    });
+  });
+  qsa('.del-doctor-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (await confirmDialog('Delete this doctor record?')) {
+        DB.delete('doctors', btn.dataset.id);
+        toast('Doctor removed.', 'info');
+        Router.navigate('admin-doctors');
+      }
+    });
+  });
+}
+
+function attachApptActions() {
+  qsa('.status-change').forEach(sel => {
+    sel.addEventListener('change', () => {
+      DB.update('appointments', sel.dataset.id, { status: sel.value });
+      toast('Status updated!');
+    });
+  });
+}
+
+function attachBillActions() {
+  qsa('.mark-paid-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      DB.update('bills', btn.dataset.id, { status: 'Paid' });
+      toast('Bill marked as paid!');
+      Router.navigate('admin-billing');
+    });
+  });
+}
+
+function attachDoctorRecordBtns() {
+  qsa('.doctor-view-records').forEach(btn => {
+    btn.addEventListener('click', () => {
+      Router.navigate('doctor-records', { patientId: btn.dataset.pid, patientName: btn.dataset.pname });
+    });
+  });
+}
+
+function calcTotal() {
+  const get = name => parseInt(qs(`[name="${name}"]`)?.value) || 0;
+  const total = get('consultationFee') + get('medicationCharges') + get('otherCharges');
+  const el = qs('#bill-total');
+  if (el) el.value = total;
+}
+
+'use strict';
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   UTILITIES
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+function qs(sel, ctx = document) { return ctx.querySelector(sel); }
+function qsa(sel, ctx = document) { return [...ctx.querySelectorAll(sel)]; }
+
+function toast(msg, type = 'success') {
+  const icons = { success: 'âœ“', error: 'âœ•', info: 'â„¹' };
+  const t = document.createElement('div');
+  t.className = `toast toast-${type}`;
+  t.innerHTML = `<span class="toast-icon">${icons[type] || 'â„¹'}</span><span>${msg}</span>`;
+  qs('#toast-container').appendChild(t);
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 350); }, 3200);
+}
+
+function confirmDialog(msg) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay active';
+    overlay.innerHTML = `
+      <div class="modal-box confirm-box">
+        <div class="confirm-icon">âš ï¸</div>
+        <h3>Confirm Action</h3>
+        <p>${msg}</p>
+        <div class="modal-actions">
+          <button class="btn btn-outline" id="conf-no">Cancel</button>
+          <button class="btn btn-danger"  id="conf-yes">Confirm</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    qs('#conf-no',  overlay).onclick = () => { overlay.remove(); resolve(false); };
+    qs('#conf-yes', overlay).onclick = () => { overlay.remove(); resolve(true);  };
+  });
+}
+
+function formatDate(d) {
+  if (!d) return 'â€”';
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function getAge(dob) {
+  if (!dob) return 'â€”';
+  const ms = Date.now() - new Date(dob).getTime();
+  return Math.floor(ms / (365.25 * 24 * 3600 * 1000)) + ' yrs';
+}
+
+function statusBadge(status) {
+  const map = {
+    Scheduled: 'badge-blue', Completed: 'badge-green', Cancelled: 'badge-red',
+    Paid: 'badge-green', Pending: 'badge-yellow', Active: 'badge-green', Inactive: 'badge-gray'
+  };
+  return `<span class="badge ${map[status] || 'badge-gray'}">${status}</span>`;
+}
+
+function todayStr() { return new Date().toISOString().split('T')[0]; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   ROUTER
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+const Router = {
+  current: { page: '', params: {} },
+
+  navigate(page, params = {}) {
+    this.current = { page, params };
+    const contentEl = qs('#content');
+    contentEl.classList.remove('fade-in');
+    void contentEl.offsetWidth;
+    contentEl.classList.add('fade-in');
+
+    // Update sidebar active link
+    qsa('.nav-link').forEach(l => l.classList.remove('active'));
+    const link = qs(`[data-page="${page}"]`);
+    if (link) link.classList.add('active');
+
+    // Render page
+    const renders = {
+      // Admin
+      'admin-dashboard'    : () => { contentEl.innerHTML = Views.adminDashboard();    Views.adminDashboardInit(); },
+      'admin-patients'     : () => { contentEl.innerHTML = Views.adminPatients();     Views.adminPatientsInit(); },
+      'admin-doctors'      : () => { contentEl.innerHTML = Views.adminDoctors();      Views.adminDoctorsInit(); },
+      'admin-appointments' : () => { contentEl.innerHTML = Views.adminAppointments(); Views.adminAppointmentsInit(); },
+      'admin-billing'      : () => { contentEl.innerHTML = Views.adminBilling();      Views.adminBillingInit(); },
+      // Doctor
+      'doctor-dashboard'   : () => { contentEl.innerHTML = Views.doctorDashboard();   Views.doctorDashboardInit(); },
+      'doctor-patients'    : () => { contentEl.innerHTML = Views.doctorPatients();    Views.doctorPatientsInit(); },
+      'doctor-records'     : () => { contentEl.innerHTML = Views.doctorRecords(params); Views.doctorRecordsInit(params); },
+      // Receptionist
+      'recep-dashboard'    : () => { contentEl.innerHTML = Views.recepDashboard();    Views.recepDashboardInit(); },
+      'recep-register'     : () => { contentEl.innerHTML = Views.recepRegister();     Views.recepRegisterInit(); },
+      'recep-appointments' : () => { contentEl.innerHTML = Views.recepAppointments(); Views.recepAppointmentsInit(); },
+      // Patient
+      'patient-dashboard'  : () => { contentEl.innerHTML = Views.patientDashboard(); Views.patientDashboardInit(); },
+      'patient-records'    : () => { contentEl.innerHTML = Views.patientRecords();   Views.patientRecordsInit(); },
+      'patient-bills'      : () => { contentEl.innerHTML = Views.patientBills();     Views.patientBillsInit(); },
+    };
+
+    if (renders[page]) renders[page]();
+    else contentEl.innerHTML = `<div class="empty-state"><div class="empty-icon">ðŸš§</div><h3>Page not found</h3></div>`;
+  }
+};
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SIDEBAR BUILDER
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+function buildSidebar(session) {
+  const navs = {
+    admin: [
+      { icon: 'ðŸ ', label: 'Dashboard',    page: 'admin-dashboard' },
+      { icon: 'ðŸ‘¥', label: 'Patients',     page: 'admin-patients' },
+      { icon: 'ðŸ©º', label: 'Doctors',      page: 'admin-doctors' },
+      { icon: 'ðŸ“…', label: 'Appointments', page: 'admin-appointments' },
+      { icon: 'ðŸ’³', label: 'Billing',      page: 'admin-billing' },
+    ],
+    doctor: [
+      { icon: 'ðŸ ', label: 'Dashboard',    page: 'doctor-dashboard' },
+      { icon: 'ðŸ‘¥', label: 'My Patients',  page: 'doctor-patients' },
+    ],
+    receptionist: [
+      { icon: 'ðŸ ', label: 'Dashboard',    page: 'recep-dashboard' },
+      { icon: 'âž•', label: 'Register Patient', page: 'recep-register' },
+      { icon: 'ðŸ“…', label: 'Appointments', page: 'recep-appointments' },
+    ],
+    patient: [
+      { icon: 'ðŸ ', label: 'Dashboard',    page: 'patient-dashboard' },
+      { icon: 'ðŸ“‹', label: 'My Records',   page: 'patient-records' },
+      { icon: 'ðŸ’³', label: 'My Bills',     page: 'patient-bills' },
+    ],
+  };
+
+  const links = (navs[session.role] || []).map(n => `
+    <button class="nav-link" data-page="${n.page}">
+      <span class="nav-icon">${n.icon}</span>${n.label}
+    </button>`).join('');
+
+  const initials = session.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+  qs('#sidebar').innerHTML = `
+    <div class="sidebar-logo">
+      <div class="logo-icon">ðŸ¥</div>
+      <div><h2>Ghotra's Hospital</h2><span>Management System</span></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Navigation</div>
+      ${links}
+    </div>
+    <div class="sidebar-bottom">
+      <div class="user-card">
+        <div class="user-avatar">${initials}</div>
+        <div class="user-info">
+          <div class="user-name">${session.name}</div>
+          <div class="user-role">${session.role}</div>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" id="logout-btn" style="width:100%;margin-top:10px;justify-content:center;">
+        ðŸšª Logout
+      </button>
+    </div>`;
+
+  // Attach nav events
+  qsa('.nav-link').forEach(btn => {
+    btn.addEventListener('click', () => Router.navigate(btn.dataset.page));
+  });
+
+  qs('#logout-btn').addEventListener('click', () => {
+    Auth.logout();
+    showLogin();
+  });
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   LOGIN
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+function showLogin() {
+  qs('#login-screen').style.display = 'flex';
+  qs('#main-app').style.display = 'none';
+  qs('#login-error').textContent = '';
+  qs('#login-username').value = '';
+  qs('#login-password').value = '';
+}
+
+function showApp(session) {
+  qs('#login-screen').style.display = 'none';
+  qs('#main-app').style.display = 'flex';
+  buildSidebar(session);
+  qs('#topbar-user').textContent = session.name;
+
+  const defaults = {
+    admin: 'admin-dashboard',
+    doctor: 'doctor-dashboard',
+    receptionist: 'recep-dashboard',
+    patient: 'patient-dashboard',
+  };
+  Router.navigate(defaults[session.role] || 'admin-dashboard');
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   INIT
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+document.addEventListener('DOMContentLoaded', () => {
+  DB.init();
+
+  // Login form
+  qs('#login-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const username = qs('#login-username').value.trim();
+    const password = qs('#login-password').value.trim();
+    const result = Auth.login(username, password);
+    if (result.success) {
+      showApp(result.session);
+    } else {
+      qs('#login-error').textContent = 'âš  Invalid username or password.';
+    }
+  });
+
+  // Demo credential buttons
+  qsa('.demo-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      qs('#login-username').value = btn.dataset.user;
+      qs('#login-password').value = btn.dataset.pass;
+    });
+  });
+
+  // Mobile sidebar toggle
+  const menuBtn = qs('#menu-toggle');
+  if (menuBtn) {
+    menuBtn.addEventListener('click', () => qs('#sidebar').classList.toggle('open'));
+  }
+
+  // Resume session if exists
+  const session = Auth.getSession();
+  if (session) showApp(session);
+  else showLogin();
+});
+
+</script>
+</body>
+</html>
