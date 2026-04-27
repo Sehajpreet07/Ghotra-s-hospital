@@ -229,6 +229,68 @@ document.addEventListener('DOMContentLoaded', () => {
     menuBtn.addEventListener('click', () => qs('#sidebar').classList.toggle('open'));
   }
 
+  // Self Registration
+  const btnOpenReg = qs('#open-patient-register');
+  const modalReg   = qs('#self-register-modal');
+  if (btnOpenReg && modalReg) {
+    btnOpenReg.addEventListener('click', () => {
+      qs('#self-register-form').reset();
+      qs('#self-register-error').textContent = '';
+      modalReg.classList.add('active');
+    });
+    qs('#close-self-register').addEventListener('click', () => modalReg.classList.remove('active'));
+    qs('#cancel-self-register').addEventListener('click', () => modalReg.classList.remove('active'));
+
+    qs('#self-register-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      const errEl = qs('#self-register-error');
+      
+      // Check for duplicates
+      if (DB.getAll('patients').find(p => p.aadhaar === data.aadhaar)) {
+        errEl.textContent = '⚠ A patient with this Aadhaar already exists.';
+        return;
+      }
+      if (DB.getAll('users').find(u => u.username === data.username)) {
+        errEl.textContent = '⚠ Username already taken. Please choose another.';
+        return;
+      }
+
+      // Generate IDs
+      const patientId = DB.genPatientId();
+      const userId = DB.genId('u');
+
+      // Add to patients
+      DB.add('patients', {
+        id: patientId,
+        name: data.name,
+        dob: data.dob,
+        gender: data.gender,
+        aadhaar: data.aadhaar,
+        address: data.address,
+        contact: data.contact,
+        email: data.email,
+        registeredOn: todayStr()
+      });
+
+      // Add to users
+      DB.add('users', {
+        id: userId,
+        username: data.username,
+        password: data.password,
+        role: 'patient',
+        name: data.name,
+        email: data.email,
+        patientId: patientId
+      });
+
+      modalReg.classList.remove('active');
+      toast('Registration successful! You can now log in.');
+      qs('#login-username').value = data.username;
+      qs('#login-password').value = data.password;
+    });
+  }
+
   // Resume session if exists
   const session = Auth.getSession();
   if (session) showApp(session);
