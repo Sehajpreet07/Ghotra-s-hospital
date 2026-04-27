@@ -1,4 +1,4 @@
-import os
+ import os
 
 base = r"c:\Users\ASUS S15\OneDrive\Documents\Desktop\college hms"
 
@@ -60,6 +60,51 @@ css,
       </div>
       <div id="login-error" style="color:var(--danger);font-size:13px;margin-bottom:10px;min-height:18px"></div>
       <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+      <div style="text-align:center; margin-top:16px;">
+        <span style="color:var(--muted);font-size:13px;">New patient?</span> 
+        <button type="button" id="open-patient-register" style="background:none;border:none;color:var(--primary);font-weight:600;cursor:pointer;font-size:13px;font-family:inherit;">Register Here</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Self Registration Modal -->
+<div class="modal-overlay" id="self-register-modal">
+  <div class="modal-box wide">
+    <div class="modal-header">
+      <h3>Patient Registration</h3>
+      <button class="modal-close" id="close-self-register">×</button>
+    </div>
+    <form id="self-register-form">
+      <div class="form-row">
+        <div class="form-group"><label>Full Name *</label><input class="form-control" name="name" required></div>
+        <div class="form-group"><label>Date of Birth *</label><input type="date" class="form-control" name="dob" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Gender *</label>
+          <select class="form-control" name="gender" required>
+            <option value="">Select</option>
+            <option>Male</option><option>Female</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Aadhaar Number *</label><input class="form-control" name="aadhaar" maxlength="12" required></div>
+      </div>
+      <div class="form-group"><label>Address *</label><input class="form-control" name="address" required></div>
+      <div class="form-row">
+        <div class="form-group"><label>Contact Number *</label><input class="form-control" name="contact" required></div>
+        <div class="form-group"><label>Email</label><input type="email" class="form-control" name="email"></div>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+      <h4 style="margin-bottom:12px;font-size:14px;color:var(--primary)">Login Credentials</h4>
+      <div class="form-row">
+        <div class="form-group"><label>Username *</label><input class="form-control" name="username" required></div>
+        <div class="form-group"><label>Password *</label><input type="password" class="form-control" name="password" required></div>
+      </div>
+      <div id="self-register-error" style="color:var(--danger);font-size:13px;margin-bottom:10px;"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="cancel-self-register">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create Account</button>
+      </div>
     </form>
   </div>
 </div>
@@ -96,3 +141,4 @@ with open(out_path, 'w', encoding='utf-8') as f:
 size_kb = os.path.getsize(out_path) / 1024
 print(f"SUCCESS! index.html = {size_kb:.1f} KB")
 print(f"Template literals preserved: {'${' in output}")
+
